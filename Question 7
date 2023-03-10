@@ -1,0 +1,11 @@
+UPDATE country_vaccination_stats t1
+SET daily_vaccinations = (
+    SELECT COALESCE(MEDIAN(daily_vaccinations) WITHIN GROUP (ORDER BY daily_vaccinations DESC), 0)
+    FROM country_vaccination_stats t2
+    WHERE t2.country = t1.country AND daily_vaccinations IS NOT NULL
+)
+WHERE daily_vaccinations IS NULL;
+
+UPDATE country_vaccination_stats
+SET daily_vaccinations = 0
+WHERE daily_vaccinationsr IS NULL;
